@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# Copyright (C) 2010 ePoint Systems Ltd.
+# Author: Daniel A. Nagy
+
+uci batch <<-EOF
+    set network.mobile=interface
+    commit network
+EOF

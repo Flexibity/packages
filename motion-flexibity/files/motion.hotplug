@@ -1,0 +1,11 @@
+case "$ACTION" in
+	add)
+	        # start process
+		/etc/init.d/motion start
+	        ;;
+	remove)
+	        # stop process
+		/etc/init.d/motion stop
+	        ;;
+esac
+

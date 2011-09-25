@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Copyright (C) 2010 ePoint Systems Ltd.
+# Author: Daniel A. Nagy
+
+uci batch <<-EOF
+    set network.mobile=interface
+    set network.mobile.device=/dev/ttyUSB0
+    commit network
+EOF

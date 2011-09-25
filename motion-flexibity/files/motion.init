@@ -1,0 +1,250 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2009 OpenWrt.org
+START=50
+
+SSD=start-stop-daemon
+NAME=motion
+PIDF=/var/run/$NAME.pid
+PROG=/usr/bin/$NAME
+CFGF=/tmp/motion.conf
+
+start() {
+	config_load motion
+	config_get device motion videodevice
+	config_get_bool enabled motion enabled
+
+	# export configuration file
+	config_get option motion videodevice
+	[ "x$option" != "x" ] && echo "videodevice $option" > $CFGF
+	config_get option motion v4l2_palette
+	[ "x$option" != "x" ] && echo "v4l2_palette $option" >> $CFGF
+	config_get option motion input
+	[ "x$option" != "x" ] && echo "input $option" >> $CFGF
+	config_get option motion norm
+	[ "x$option" != "x" ] && echo "norm $option" >> $CFGF
+	config_get option motion frequency
+	[ "x$option" != "x" ] && echo "frequency $option" >> $CFGF
+	config_get option motion rotate
+	[ "x$option" != "x" ] && echo "rotate $option" >> $CFGF
+	config_get option motion width
+	[ "x$option" != "x" ] && echo "width $option" >> $CFGF
+	config_get option motion height
+	[ "x$option" != "x" ] && echo "height $option" >> $CFGF
+	config_get option motion framerate
+	[ "x$option" != "x" ] && echo "framerate $option" >> $CFGF
+	config_get option motion minimum_frame_time
+	[ "x$option" != "x" ] && echo "minimum_frame_time $option" >> $CFGF
+	config_get option motion netcam_url
+	[ "x$option" != "x" ] && echo "netcam_url $option" >> $CFGF
+	config_get option motion netcam_userpass
+	[ "x$option" != "x" ] && echo "netcam_userpass $option" >> $CFGF
+	config_get option motion netcam_http
+	[ "x$option" != "x" ] && echo "netcam_http $option" >> $CFGF
+	config_get option motion netcam_proxy
+	[ "x$option" != "x" ] && echo "netcam_proxy $option" >> $CFGF
+	config_get option motion netcam_tolerant_check
+	[ "x$option" != "x" ] && echo "netcam_tolerant_check $option" >> $CFGF
+	config_get option motion auto_brightness
+	[ "x$option" != "x" ] && echo "auto_brightness $option" >> $CFGF
+	config_get option motion brightness
+	[ "x$option" != "x" ] && echo "brightness $option" >> $CFGF
+	config_get option motion contrast
+	[ "x$option" != "x" ] && echo "contrast $option" >> $CFGF
+	config_get option motion saturation
+	[ "x$option" != "x" ] && echo "saturation $option" >> $CFGF
+	config_get option motion hue
+	[ "x$option" != "x" ] && echo "hue $option" >> $CFGF
+	config_get option motion roundrobin_frames
+	[ "x$option" != "x" ] && echo "roundrobin_frames $option" >> $CFGF
+	config_get option motion roundrobin_skip
+	[ "x$option" != "x" ] && echo "roundrobin_skip $option" >> $CFGF
+	config_get option motion switchfilter
+	[ "x$option" != "x" ] && echo "switchfilter $option" >> $CFGF
+	config_get option motion threshold
+	[ "x$option" != "x" ] && echo "threshold $option" >> $CFGF
+	config_get option motion threshold_tune
+	[ "x$option" != "x" ] && echo "threshold_tune $option" >> $CFGF
+	config_get option motion noise_level
+	[ "x$option" != "x" ] && echo "noise_level $option" >> $CFGF
+	config_get option motion noise_tune
+	[ "x$option" != "x" ] && echo "noise_tune $option" >> $CFGF
+	config_get option motion despeckle
+	[ "x$option" != "x" ] && echo "despeckle $option" >> $CFGF
+	config_get option motion area_detect
+	[ "x$option" != "x" ] && echo "area_detect $option" >> $CFGF
+	config_get option motion mask_file
+	[ "x$option" != "x" ] && echo "mask_file $option" >> $CFGF
+	config_get option motion smart_mask_speed
+	[ "x$option" != "x" ] && echo "smart_mask_speed $option" >> $CFGF
+	config_get option motion lightswitch
+	[ "x$option" != "x" ] && echo "lightswitch $option" >> $CFGF
+	config_get option motion minimum_motion_frames
+	[ "x$option" != "x" ] && echo "minimum_motion_frames $option" >> $CFGF
+	config_get option motion pre_capture
+	[ "x$option" != "x" ] && echo "pre_capture $option" >> $CFGF
+	config_get option motion post_capture
+	[ "x$option" != "x" ] && echo "post_capture $option" >> $CFGF
+	config_get option motion gap
+	[ "x$option" != "x" ] && echo "gap $option" >> $CFGF
+	config_get option motion max_mpeg_time
+	[ "x$option" != "x" ] && echo "max_mpeg_time $option" >> $CFGF
+	config_get option motion output_all
+	[ "x$option" != "x" ] && echo "output_all $option" >> $CFGF
+	config_get option motion output_normal
+	[ "x$option" != "x" ] && echo "output_normal $option" >> $CFGF
+	config_get option motion output_motion
+	[ "x$option" != "x" ] && echo "output_motion $option" >> $CFGF
+	config_get option motion quality
+	[ "x$option" != "x" ] && echo "quality $option" >> $CFGF
+	config_get option motion ppm
+	[ "x$option" != "x" ] && echo "ppm $option" >> $CFGF
+	config_get option motion ffmpeg_cap_new
+	[ "x$option" != "x" ] && echo "ffmpeg_cap_new $option" >> $CFGF
+	config_get option motion ffmpeg_cap_motion
+	[ "x$option" != "x" ] && echo "ffmpeg_cap_motion $option" >> $CFGF
+	config_get option motion ffmpeg_timelapse
+	[ "x$option" != "x" ] && echo "ffmpeg_timelapse $option" >> $CFGF
+	config_get option motion ffmpeg_timelapse_mode
+	[ "x$option" != "x" ] && echo "ffmpeg_timelapse_mode $option" >> $CFGF
+	config_get option motion ffmpeg_bps
+	[ "x$option" != "x" ] && echo "ffmpeg_bps $option" >> $CFGF
+	config_get option motion ffmpeg_variable_bitrate
+	[ "x$option" != "x" ] && echo "ffmpeg_variable_bitrate $option" >> $CFGF
+	config_get option motion ffmpeg_video_codec
+	[ "x$option" != "x" ] && echo "ffmpeg_video_codec $option" >> $CFGF
+	config_get option motion ffmpeg_deinterlace
+	[ "x$option" != "x" ] && echo "ffmpeg_deinterlace $option" >> $CFGF
+	config_get option motion snapshot_interval
+	[ "x$option" != "x" ] && echo "snapshot_interval $option" >> $CFGF
+	config_get option motion locate
+	[ "x$option" != "x" ] && echo "locate $option" >> $CFGF
+	config_get option motion text_right
+	[ "x$option" != "x" ] && echo "text_right $option" >> $CFGF
+	config_get option motion text_left
+	[ "x$option" != "x" ] && echo "text_left $option" >> $CFGF
+	config_get option motion text_changes
+	[ "x$option" != "x" ] && echo "text_changes $option" >> $CFGF
+	config_get option motion text_event
+	[ "x$option" != "x" ] && echo "text_event $option" >> $CFGF
+	config_get option motion text_double
+	[ "x$option" != "x" ] && echo "text_double $option" >> $CFGF
+	config_get option motion target_dir
+	[ "x$option" != "x" ] && echo "target_dir $option" >> $CFGF
+	config_get option motion snapshot_filename
+	[ "x$option" != "x" ] && echo "snapshot_filename $option" >> $CFGF
+	config_get option motion jpeg_filename
+	[ "x$option" != "x" ] && echo "jpeg_filename $option" >> $CFGF
+	config_get option motion movie_filename
+	[ "x$option" != "x" ] && echo "movie_filename $option" >> $CFGF
+	config_get option motion timelapse_filename
+	[ "x$option" != "x" ] && echo "timelapse_filename $option" >> $CFGF
+	config_get option motion webcam_port
+	[ "x$option" != "x" ] && echo "webcam_port $option" >> $CFGF
+	config_get option motion webcam_quality
+	[ "x$option" != "x" ] && echo "webcam_quality $option" >> $CFGF
+	config_get option motion webcam_motion
+	[ "x$option" != "x" ] && echo "webcam_motion $option" >> $CFGF
+	config_get option motion webcam_maxrate
+	[ "x$option" != "x" ] && echo "webcam_maxrate $option" >> $CFGF
+	config_get option motion webcam_localhost
+	[ "x$option" != "x" ] && echo "webcam_localhost $option" >> $CFGF
+	config_get option motion webcam_limit
+	[ "x$option" != "x" ] && echo "webcam_limit $option" >> $CFGF
+	config_get option motion control_port
+	[ "x$option" != "x" ] && echo "control_port $option" >> $CFGF
+	config_get option motion control_localhost
+	[ "x$option" != "x" ] && echo "control_localhost $option" >> $CFGF
+	config_get option motion control_html_output
+	[ "x$option" != "x" ] && echo "control_html_output $option" >> $CFGF
+	config_get option motion control_authentication
+	[ "x$option" != "x" ] && echo "control_authentication $option" >> $CFGF
+	config_get option motion track_type
+	[ "x$option" != "x" ] && echo "track_type $option" >> $CFGF
+	config_get option motion track_auto
+	[ "x$option" != "x" ] && echo "track_auto $option" >> $CFGF
+	config_get option motion track_port
+	[ "x$option" != "x" ] && echo "track_port $option" >> $CFGF
+	config_get option motion track_motorx
+	[ "x$option" != "x" ] && echo "track_motorx $option" >> $CFGF
+	config_get option motion track_motory
+	[ "x$option" != "x" ] && echo "track_motory $option" >> $CFGF
+	config_get option motion track_maxx
+	[ "x$option" != "x" ] && echo "track_maxx $option" >> $CFGF
+	config_get option motion track_maxy
+	[ "x$option" != "x" ] && echo "track_maxy $option" >> $CFGF
+	config_get option motion track_iomojo_id
+	[ "x$option" != "x" ] && echo "track_iomojo_id $option" >> $CFGF
+	config_get option motion track_step_angle_x
+	[ "x$option" != "x" ] && echo "track_step_angle_x $option" >> $CFGF
+	config_get option motion track_step_angle_y
+	[ "x$option" != "x" ] && echo "track_step_angle_y $option" >> $CFGF
+	config_get option motion track_move_wait
+	[ "x$option" != "x" ] && echo "track_move_wait $option" >> $CFGF
+	config_get option motion track_speed
+	[ "x$option" != "x" ] && echo "track_speed $option" >> $CFGF
+	config_get option motion track_stepsize
+	[ "x$option" != "x" ] && echo "track_stepsize $option" >> $CFGF
+	config_get option motion quiet
+	[ "x$option" != "x" ] && echo "quiet $option" >> $CFGF
+	config_get option motion on_event_start
+	[ "x$option" != "x" ] && echo "on_event_start $option" >> $CFGF
+	config_get option motion on_event_end
+	[ "x$option" != "x" ] && echo "on_event_end $option" >> $CFGF
+	config_get option motion on_picture_save
+	[ "x$option" != "x" ] && echo "on_picture_save $option" >> $CFGF
+	config_get option motion on_motion_detected
+	[ "x$option" != "x" ] && echo "on_motion_detected $option" >> $CFGF
+	config_get option motion on_area_detected
+	[ "x$option" != "x" ] && echo "on_area_detected $option" >> $CFGF
+	config_get option motion on_movie_start
+	[ "x$option" != "x" ] && echo "on_movie_start $option" >> $CFGF
+	config_get option motion on_movie_end
+	[ "x$option" != "x" ] && echo "on_movie_end $option" >> $CFGF
+	config_get option motion on_camera_lost
+	[ "x$option" != "x" ] && echo "on_camera_lost $option" >> $CFGF
+	config_get option motion sql_log_image
+	[ "x$option" != "x" ] && echo "sql_log_image $option" >> $CFGF
+	config_get option motion sql_log_snapshot
+	[ "x$option" != "x" ] && echo "sql_log_snapshot $option" >> $CFGF
+	config_get option motion sql_log_mpeg
+	[ "x$option" != "x" ] && echo "sql_log_mpeg $option" >> $CFGF
+	config_get option motion sql_log_timelapse
+	[ "x$option" != "x" ] && echo "sql_log_timelapse $option" >> $CFGF
+	config_get option motion sql_query
+	[ "x$option" != "x" ] && echo "sql_query $option" >> $CFGF
+	config_get option motion mysql_db
+	[ "x$option" != "x" ] && echo "mysql_db $option" >> $CFGF
+	config_get option motion mysql_host
+	[ "x$option" != "x" ] && echo "mysql_host $option" >> $CFGF
+	config_get option motion mysql_user
+	[ "x$option" != "x" ] && echo "mysql_user $option" >> $CFGF
+	config_get option motion mysql_password
+	[ "x$option" != "x" ] && echo "mysql_password $option" >> $CFGF
+	config_get option motion pgsql_db
+	[ "x$option" != "x" ] && echo "pgsql_db $option" >> $CFGF
+	config_get option motion pgsql_host
+	[ "x$option" != "x" ] && echo "pgsql_host $option" >> $CFGF
+	config_get option motion pgsql_user
+	[ "x$option" != "x" ] && echo "pgsql_user $option" >> $CFGF
+	config_get option motion pgsql_password
+	[ "x$option" != "x" ] && echo "pgsql_password $option" >> $CFGF
+	config_get option motion pgsql_port
+	[ "x$option" != "x" ] && echo "pgsql_port $option" >> $CFGF
+	config_get option motion daemon
+	[ "x$option" != "x" ] && echo "daemon $option" >> $CFGF
+	config_get option motion process_id_file
+	[ "x$option" != "x" ] && echo "process_id_file $option" >> $CFGF
+	config_get option motion setup_mode
+	[ "x$option" != "x" ] && echo "setup_mode $option" >> $CFGF
+	config_get option motion video_pipe
+	[ "x$option" != "x" ] && echo "video_pipe $option" >> $CFGF
+	config_get option motion motion_video_pipe
+	[ "x$option" != "x" ] && echo "motion_video_pipe $option" >> $CFGF
+	
+	[ $enabled -gt 0 -a -c $device ] && sleep 3 && $SSD -S -m -p $PIDF -q -x $PROG -- -c $CFGF &
+}
+
+stop() {
+	$SSD -K -p $PIDF
+}
+

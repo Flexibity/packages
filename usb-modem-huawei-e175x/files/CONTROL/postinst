@@ -1,0 +1,3 @@
+#!/bin/sh
+[ -n "${IPKG_INSTROOT}" ] ||
+    /etc/uci-defaults/usb-modem-huawei-e175x && rm -f /etc/uci-defaults/usb-modem-huawei-e175x

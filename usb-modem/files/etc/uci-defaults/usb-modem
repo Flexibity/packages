@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# Copyright (C) 2010 ePoint Systems Ltd.
+# Author: Daniel A. Nagy
+
+uci batch <<-EOF
+    set network.mobile=interface
+    set network.mobile.proto=3g
+    set network.mobile.ifname=ppp0
+    set network.mobile.service=umts
+    commit network
+EOF
+
+if [ 'wan' == `uci get firewall.@zone[1].name` ]; then
+    uci get firewall.@zone[1].network ||
+        uci add_list firewall.@zone[1].network=wan
+    uci add_list firewall.@zone[1].network=mobile
+    uci commit firewall
+fi

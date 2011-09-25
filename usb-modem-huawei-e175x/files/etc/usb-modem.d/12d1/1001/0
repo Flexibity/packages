@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# Copyright (C) 2010 ePoint Systems Ltd.
+# Author: Daniel A. Nagy
+
+uci set network.mobile.device=/dev/ttyUSB0
+uci commit network
+ifup mobile
