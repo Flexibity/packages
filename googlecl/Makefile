@@ -26,7 +26,7 @@ define Package/googlecl
   CATEGORY:=Languages
   TITLE:=Python interface to Google
   URL:=http://code.google.com/p/googlecl/
-  DEPENDS:=+python +gdata
+  DEPENDS:=+python +gdata +elinks +python-expat +python-openssl
 endef
 
 define PyPackage/googlecl/filespec

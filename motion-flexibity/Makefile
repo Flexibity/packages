@@ -37,6 +37,8 @@ CONFIGURE_ARGS+= \
 #	--without-pgsql \
 
 define Package/motion-flexibity/install
+	$(INSTALL_DIR) $(1)/www
+	$(INSTALL_DIR) $(1)/www/cam1
 	$(INSTALL_DIR) $(1)/etc
 	$(CP) $(PKG_INSTALL_DIR)/etc/motion-dist.conf $(1)/etc/motion.conf
 	$(INSTALL_DIR) $(1)/usr/bin
