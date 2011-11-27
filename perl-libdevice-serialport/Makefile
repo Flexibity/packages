@@ -32,7 +32,7 @@ define Build/Compile
 endef
 
 define Package/perl-libdevice-serialport/install
-	$(call perlmod/Install,$(1),Device/SerialPort auto/Device/SerialPort)
+	$(call perlmod/Install,$(1),Device/SerialPort.pm auto/Device/SerialPort)
 endef
 
 

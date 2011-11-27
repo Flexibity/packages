@@ -32,7 +32,7 @@ define Build/Compile
 endef
 
 define Package/perl-libterm-readkey/install
-	$(call perlmod/Install,$(1),Term/ReadKey auto/Term/ReadKey)
+	$(call perlmod/Install,$(1),Term/ReadKey.pm auto/Term/ReadKey)
 endef
 
 
