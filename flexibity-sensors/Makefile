@@ -23,6 +23,7 @@ define Package/flexibity-sensors
   TITLE:=Flexibity Connect sensors control utilities
   URL:=http://www.flexibity.com/
   VERSION:=$(PKG_RELEASE)-$(REVISION)
+  DEPENDS:=+perl-libdevice-serialport +perl-libterm-readkey
 endef
 
 define Package/flexibity-sensors/conffiles
