@@ -1,0 +1,17 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2009 OpenWrt.org
+START=50
+
+SSD=start-stop-daemon
+NAME=tunslip6
+PIDF=/var/run/$NAME.pid
+PROG=/usr/bin/$NAME
+
+start() {
+	sleep 3 && $SSD -S -m -p $PIDF -q -x $PROG -- -B 115200 -s /dev/ttyS1 -t wpan0 192.168.111.1 &
+}
+
+stop() {
+	$SSD -K -p $PIDF
+}
+

@@ -23,7 +23,7 @@ define Package/flexibity-sensors
   TITLE:=Flexibity Connect sensors control utilities
   URL:=http://www.flexibity.com/
   VERSION:=$(PKG_RELEASE)-$(REVISION)
-  DEPENDS:=+perl-libdevice-serialport +perl-libterm-readkey
+  DEPENDS:=+perl +perl-libdevice-serialport +perl-libterm-readkey
 endef
 
 define Package/flexibity-sensors/conffiles
@@ -36,14 +36,23 @@ endef
 
 define Build/Prepare
 	mkdir -p $(PKG_BUILD_DIR)
+	$(CP) ./files/tunslip6.c $(PKG_BUILD_DIR)/tunslip6.c
 endef
 
 define Build/Compile
+	$(TARGET_CC) $(TARGET_CFLAGS) -o $(PKG_BUILD_DIR)/tunslip6 $(PKG_BUILD_DIR)/tunslip6.c
 endef
 
 define Package/flexibity-sensors/install
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_CONF) files/sensors.config $(1)/etc/config/sensors
+	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_BIN) ./files/tunslip6.init $(1)/etc/init.d/tunslip6
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/tunslip6 $(1)/usr/bin/
+	$(INSTALL_BIN) files/mc1322x-reset.sh $(1)/usr/bin/
+	$(INSTALL_BIN) files/mc1322x-erase.sh $(1)/usr/bin/
+	$(INSTALL_BIN) files/mc1322x-load.pl $(1)/usr/bin/
 endef
 
 $(eval $(call BuildPackage,flexibity-sensors))
