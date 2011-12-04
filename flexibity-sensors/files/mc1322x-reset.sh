@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # reset is connected to PB10 (gpio 74)
 
 echo 0 > /sys/class/gpio/gpio74/value

@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # _RESETB is connected to PB10 (gpio 74)
 # ADC2_VREFL is connected to PA14 (gpio 46)
 # ADC2_VREFH is connected to PA15 (gpio 47)
