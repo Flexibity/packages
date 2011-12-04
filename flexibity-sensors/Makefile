@@ -53,6 +53,10 @@ define Package/flexibity-sensors/install
 	$(INSTALL_BIN) files/mc1322x-reset.sh $(1)/usr/bin/
 	$(INSTALL_BIN) files/mc1322x-erase.sh $(1)/usr/bin/
 	$(INSTALL_BIN) files/mc1322x-load.pl $(1)/usr/bin/
+	$(INSTALL_DIR) $(1)/usr/lib/firmware
+	$(INSTALL_DIR) $(1)/usr/lib/firmware/sensors
+	$(INSTALL_BIN) files/border-router.bin $(1)/usr/lib/firmware/sensors/
+	$(INSTALL_BIN) files/flasher.bin $(1)/usr/lib/firmware/sensors/
 endef
 
 $(eval $(call BuildPackage,flexibity-sensors))
