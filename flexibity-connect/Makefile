@@ -43,6 +43,8 @@ endef
 define Package/flexibity-connect/install
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_CONF) files/connect.config $(1)/etc/config/connect
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) files/google-sync.sh $(1)/usr/bin/
 endef
 
 $(eval $(call BuildPackage,flexibity-connect))
