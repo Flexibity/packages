@@ -6,9 +6,10 @@ SSD=start-stop-daemon
 NAME=tunslip6
 PIDF=/var/run/$NAME.pid
 PROG=/usr/bin/$NAME
+ADDR=aaaa::1/64
 
 start() {
-	sleep 3 && $SSD -S -m -p $PIDF -q -x $PROG -- -B 115200 -s /dev/ttyS1 -t wpan0 192.168.111.1 &
+	mc1322x-reset.sh && sleep 3 && $SSD -S -m -p $PIDF -q -x $PROG -- -B 115200 -s /dev/ttyS1 -t wpan0 $ADDR &
 }
 
 stop() {
