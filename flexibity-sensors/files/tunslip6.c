@@ -593,7 +593,7 @@ ifconf(const char *tundev, const char *ipaddr)
 {
 #ifdef linux
   if (timestamp) stamptime();
-  ssystem("ifconfig %s inet `hostname` up", tundev);
+  ssystem("ifconfig %s inet up", tundev);
   if (timestamp) stamptime();
   ssystem("ifconfig %s add %s", tundev, ipaddr);
 #else
