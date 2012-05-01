@@ -14,8 +14,9 @@ start() {
 	config_load network
 	config_get ifname sensors ifname 'wpan0'
 	config_get ip6addr sensors ip6addr 'aaaa::1/64'
+	config_get device sensors device '/dev/ttyUSB0'
 
-	mc1322x-reset.sh && sleep 3 && $SSD -S -m -p $PIDF -q -x $PROG -- -B 115200 -s /dev/ttyS1 -t $ifname $ip6addr &
+	mc1322x-reset.sh && sleep 3 && $SSD -S -m -p $PIDF -q -x $PROG -- -B 115200 -s $device -t $ifname $ip6addr &
 }
 
 stop() {
