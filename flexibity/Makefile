@@ -8,7 +8,7 @@ include $(INCLUDE_DIR)/kernel.mk
 PKG_NAME:=flexibity
 PKG_RELEASE:=1
 
-PKG_BUILD_DEPENDS:=opkg/host
+PKG_BUILD_DEPENDS:=opkg/host libftdi libusb
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -18,7 +18,7 @@ define Package/flexibity
   TITLE:=Flexibity sensors control utilities
   URL:=http://www.flexibity.com/
   VERSION:=$(PKG_RELEASE)-$(REVISION)
-  DEPENDS:=+perl +perl-libdevice-serialport +perl-libterm-readkey +libftdi +kmod-usb-serial-ftdi
+  DEPENDS:=+libftdi +kmod-usb-serial-ftdi
 endef
 
 define Package/flexibity/conffiles
@@ -33,11 +33,13 @@ define Build/Prepare
 	mkdir -p $(PKG_BUILD_DIR)
 	$(CP) ./files/tunslip6.c $(PKG_BUILD_DIR)/tunslip6.c
 	$(CP) ./files/bbmc.c $(PKG_BUILD_DIR)/bbmc.c
+	$(CP) ./files/mc1322x-load.c $(PKG_BUILD_DIR)/mc1322x-load.c
 endef
 
 define Build/Compile
-	$(TARGET_CC) $(TARGET_CFLAGS) -o $(PKG_BUILD_DIR)/tunslip6 $(PKG_BUILD_DIR)/tunslip6.c
-	$(TARGET_CC) $(TARGET_CFLAGS) -lftdi -o $(PKG_BUILD_DIR)/bbmc $(PKG_BUILD_DIR)/bbmc.c
+	$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) $(TARGET_LDFLAGS) -o $(PKG_BUILD_DIR)/tunslip6 $(PKG_BUILD_DIR)/tunslip6.c
+	$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) $(TARGET_LDFLAGS) -lftdi -lusb -o $(PKG_BUILD_DIR)/mc1322x-ctl $(PKG_BUILD_DIR)/bbmc.c
+	$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) $(TARGET_LDFLAGS) -o $(PKG_BUILD_DIR)/mc1322x-load $(PKG_BUILD_DIR)/mc1322x-load.c
 endef
 
 define Package/flexibity/install
@@ -47,10 +49,10 @@ define Package/flexibity/install
 	$(INSTALL_BIN) ./files/tunslip6.init $(1)/etc/init.d/tunslip6
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/tunslip6 $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bbmc $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/mc1322x-ctl $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/mc1322x-load $(1)/usr/bin/
 	$(INSTALL_BIN) files/mc1322x-reset.sh $(1)/usr/bin/
 	$(INSTALL_BIN) files/mc1322x-erase.sh $(1)/usr/bin/
-	$(INSTALL_BIN) files/mc1322x-load.pl $(1)/usr/bin/
 	$(INSTALL_DIR) $(1)/usr/lib/firmware
 	$(INSTALL_DIR) $(1)/usr/lib/firmware/sensors
 	$(INSTALL_BIN) files/border-router.bin $(1)/usr/lib/firmware/sensors/
