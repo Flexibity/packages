@@ -3,12 +3,12 @@
 #
 
 include $(TOPDIR)/rules.mk
-include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=flexibity
+PKG_VERSION:=0.1.0
 PKG_RELEASE:=1
 
-PKG_BUILD_DEPENDS:=opkg/host libftdi libusb
+PKG_BUILD_DEPENDS:=libftdi libusb
 
 include $(INCLUDE_DIR)/package.mk
 
