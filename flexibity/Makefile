@@ -62,8 +62,8 @@ define Package/flexibity/postinst
 # add /etc/config/network entries
 uci set network.wpan0=interface
 uci set network.wpan0.type=static
-uci set network.wpan0.ip6addr=aaaa::/1
-uci set network.wpan0.device=/dev/ttyUSB0
+uci set network.wpan0.ip6addr=aaaa::1/64
+uci set network.wpan0.device=/dev/ttyUSB1
 uci commit network
 # check if we are on real system
 if [ -z "$${IPKG_INSTROOT}" ]; then

@@ -14,9 +14,9 @@ start() {
 
 	config_load network
 	config_get ip6addr wpan0 ip6addr 'aaaa::1/64'
-	config_get device wpan0 device '/dev/ttyUSB0'
+	config_get device wpan0 device '/dev/ttyUSB1'
 
-	$SSD -S -m -p $PIDF -q -x $PROG -- -B 115200 -s $device -t $IFNAME $ip6addr &
+	$SSD -S -m -p $PIDF -q -x $PROG -- -B 9600 -s $device -t $IFNAME $ip6addr &
 }
 
 stop() {
