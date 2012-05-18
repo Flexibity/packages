@@ -18,7 +18,7 @@ define Package/flexibity
   TITLE:=Flexibity sensors control utilities
   URL:=http://www.flexibity.com/
   VERSION:=$(PKG_RELEASE)-$(REVISION)
-  DEPENDS:=+libftdi +kmod-usb-serial-ftdi
+  DEPENDS:=+libftdi +kmod-usb-serial-ftdi +kmod-tun
 endef
 
 define Package/flexibity/conffiles
