@@ -5,7 +5,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=flexibity
-PKG_VERSION:=0.1.0
+PKG_VERSION:=0.2.0
 PKG_RELEASE:=1
 
 PKG_BUILD_DEPENDS:=libftdi libusb
@@ -31,13 +31,11 @@ endef
 
 define Build/Prepare
 	mkdir -p $(PKG_BUILD_DIR)
-	$(CP) ./files/tunslip6.c $(PKG_BUILD_DIR)/tunslip6.c
 	$(CP) ./files/bbmc.c $(PKG_BUILD_DIR)/bbmc.c
 	$(CP) ./files/mc1322x-load.c $(PKG_BUILD_DIR)/mc1322x-load.c
 endef
 
 define Build/Compile
-	$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) $(TARGET_LDFLAGS) -o $(PKG_BUILD_DIR)/tunslip6 $(PKG_BUILD_DIR)/tunslip6.c
 	$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) $(TARGET_LDFLAGS) -lftdi -lusb -o $(PKG_BUILD_DIR)/mc1322x-ctl $(PKG_BUILD_DIR)/bbmc.c
 	$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) $(TARGET_LDFLAGS) -o $(PKG_BUILD_DIR)/mc1322x-load $(PKG_BUILD_DIR)/mc1322x-load.c
 endef
@@ -48,7 +46,6 @@ define Package/flexibity/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/tunslip6.init $(1)/etc/init.d/tunslip6
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/tunslip6 $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/mc1322x-ctl $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/mc1322x-load $(1)/usr/bin/
 	$(INSTALL_DIR) $(1)/usr/lib/firmware
@@ -65,6 +62,10 @@ uci set network.wpan0.type=static
 uci set network.wpan0.ip6addr=aaaa::1/64
 uci set network.wpan0.device=/dev/ttyUSB1
 uci commit network
+# add /etc/config.sensors entries
+uci set sensors.router=router
+uci set sensors.router.ip6addr=aaaa::1/64
+uci commit sensors
 # check if we are on real system
 if [ -z "$${IPKG_INSTROOT}" ]; then
 	echo "Enabling rc.d symlink for tunslip6"
