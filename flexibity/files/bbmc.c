@@ -337,7 +337,7 @@ int main(int argc, char **argv)
 void usage(void) 
 {
 	int i;
-	printf(    "Usage: bbmc [options|overrides] -l|--layout layout command \n");
+	printf(    "Usage: mc1322x-ctl [options|overrides] -l|--layout layout command \n");
 	printf(    "Commands:\n");
 	for(i = 0; commands[i].name != NULL; i++) {
 		printf(    "           %s: %s\n", commands[i].name, commands[i].desc);
