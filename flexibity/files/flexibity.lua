@@ -48,27 +48,31 @@ cursor:foreach("sensors", "server",
 				if p["proto"] == "cosm" then
 					for n,d in pairs(sensors) do
 						if d["data"] then
-							local req = json.encode({
+							local body = json.encode({
                                                                 datastreams = {
                                                                         { id = "temperature", current_value = d["data"]["temp"] },
                                                                         { id = "humidity", current_value = d["data"]["hum"] },
                                                                         { id = "pressure", current_value = d["data"]["pres"] }
                                                                 }
 							});
-							local url =  p["host"]..":"..p["port"].."/v2/feeds/"..d["id"];
-							print(url.." = "..req);
-							local resp;
-							local b,c,h = http.request{
+							local url =  "http://"..p["host"]..":"..p["port"].."/v2/feeds/"..d["id"];
+							local resp = {};
+							local req = {
 								url = url,
-								method = "POST",
+								method = "PUT",
 								headers = {
-									["Content-Length"] = string.len(req),
+									["Content-Length"] = #body,
 									["Content-Type"] = "application/json",
 									["X-ApiKey"] = p["id"]
 								},
-								source = ltn12.source.string(req),
+								source = ltn12.source.string(body),
 								sink = ltn12.sink.table(resp)
-							};
+							}
+							print(url.." = "..json.encode(req));
+							local b,c,h = http.request(req);
+							print("Status:", b and "OK" or "FAILED");
+							print("HTTP code:", c);
+							print("Response "..json.encode(resp));
 						end
 					end
 				else
@@ -80,7 +84,4 @@ cursor:foreach("sensors", "server",
 		end
 	end
 )
-
-print (json.encode(sensors))
-print (json.encode(servers))
 
