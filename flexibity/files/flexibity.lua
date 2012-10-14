@@ -9,6 +9,10 @@ cursor = uci.cursor();
 sensors = {};
 servers = {};
 
+-- infinite loop begin (hardcode 10 seconds sleep)
+while true do
+os.execute("sleep " .. tonumber(10))
+
 -- read configuration and create a list of sensors
 cursor:foreach("sensors", "sensor",
         function(section)
@@ -84,4 +88,7 @@ cursor:foreach("sensors", "server",
 		end
 	end
 )
+
+-- infinite loop end
+end
 

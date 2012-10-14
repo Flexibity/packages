@@ -45,9 +45,11 @@ define Package/flexibity/install
 	$(INSTALL_CONF) files/sensors.config $(1)/etc/config/sensors
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/tunslip6.init $(1)/etc/init.d/tunslip6
+	$(INSTALL_BIN) ./files/flexibity.init $(1)/etc/init.d/flexibity
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/mc1322x-ctl $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/mc1322x-load $(1)/usr/bin/
+	$(INSTALL_BIN) files/flexibity.lua $(1)/usr/bin/
 	$(INSTALL_DIR) $(1)/usr/lib/firmware
 	$(INSTALL_DIR) $(1)/usr/lib/firmware/sensors
 	$(INSTALL_BIN) files/border-router.bin $(1)/usr/lib/firmware/sensors/

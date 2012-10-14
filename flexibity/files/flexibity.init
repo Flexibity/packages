@@ -1,0 +1,17 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2009 OpenWrt.org
+START=90
+
+SSD=start-stop-daemon
+NAME=flexibity.lua
+PIDF=/var/run/$NAME.pid
+PROG=/usr/bin/$NAME
+
+start() {
+	$SSD -S -m -p $PIDF -q -x $PROG &
+}
+
+stop() {
+	$SSD -K -p $PIDF
+}
+
