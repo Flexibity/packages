@@ -5,7 +5,7 @@ START=50
 SSD=start-stop-daemon
 NAME=tunslip6
 PIDF=/var/run/$NAME.pid
-PROG=/usr/bin/$NAME
+PROG=/usr/sbin/$NAME
 IFNAME=wpan0
 
 start() {
@@ -17,6 +17,7 @@ start() {
 	config_get device wpan0 device '/dev/ttyUSB1'
 
 	$SSD -S -m -p $PIDF -q -x $PROG -- -B 115200 -s $device -t $IFNAME $ip6addr &
+	mc1322x-ctl -l flexibity reset
 }
 
 stop() {
