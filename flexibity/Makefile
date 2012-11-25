@@ -66,8 +66,9 @@ uci set network.wpan0.device=/dev/ttyUSB1
 uci commit network
 # add /etc/config.sensors entries
 uci set sensors.router=router
-uci set sensors.router.ip6addr=aaaa::1/64
+uci set sensors.router.ip6addr=
 uci set sensors.cosm=server
+uci set sensors.cosm.name=cosm
 uci set sensors.cosm.enabled=0
 uci set sensors.cosm.host=api.cosm.com
 uci set sensors.cosm.port=80
@@ -75,10 +76,10 @@ uci set sensors.cosm.path=/v2/feeds
 uci set sensors.cosm.appdata=
 uci set sensors.cosm.interval=30
 uci set sensors.cosm.proto=cosm
-uci set sensors.sensor1=sensor
-uci set sensors.sensor1.id=YOUR_FEED_ID
-uci set sensors.sensor2=sensor
-uci set sensors.sensor2.id=YOUR_FEED_ID
+uci set sensors.sensor=sensor
+uci set sensors.sensor.name=sensor
+uci set sensors.sensor.server=cosm
+uci set sensors.sensor.id=
 uci commit sensors
 # check if we are on real system
 if [ -z "$${IPKG_INSTROOT}" ]; then
